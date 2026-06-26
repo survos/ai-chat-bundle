@@ -1,0 +1,6 @@
+framework:
+    notifier:
+        # The Mattermost chatter transport the mm:post command sends through.
+        # DSN: mattermost://<ACCESS_TOKEN>@<HOST>?channel=<CHANNEL_ID>  (https only)
+        chatter_transports:
+            mattermost: '%env(MATTERMOST_DSN)%'

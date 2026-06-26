@@ -1,0 +1,41 @@
+{
+    "name": "survos/ai-chat-demo",
+    "description": "Demo: prove survos/ai-chat-bundle can talk to a Mattermost instance via bin/console mm:post",
+    "type": "project",
+    "license": "MIT",
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require": {
+        "php": "^8.4",
+        "survos/ai-chat-bundle": "*",
+        "symfony/console": "^8.1",
+        "symfony/dotenv": "^8.1",
+        "symfony/flex": "^2",
+        "symfony/framework-bundle": "^8.1",
+        "symfony/mattermost-notifier": "^8.0",
+        "symfony/notifier": "^8.1",
+        "symfony/runtime": "^8.1",
+        "symfony/yaml": "^8.1"
+    },
+    "autoload": {
+        "psr-4": { "App\\": "src/" }
+    },
+    "repositories": [
+        { "type": "path", "url": ".." }
+    ],
+    "config": {
+        "allow-plugins": {
+            "symfony/runtime": true,
+            "symfony/flex": true
+        }
+    },
+    "extra": {
+        "symfony": { "allow-contrib": true }
+    },
+    "scripts": {
+        "auto-scripts": {
+            "cache:clear": "symfony-cmd",
+            "assets:install %PUBLIC_DIR%": "symfony-cmd"
+        }
+    }
+}
