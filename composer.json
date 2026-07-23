@@ -22,8 +22,8 @@
         "symfony/http-client": "^8.1",
         "symfony/notifier": "^8.1",
         "symfony/mattermost-notifier": "^8.0",
-        "symfony/ai-agent": "^0.11",
-        "symfony/ai-chat": "^0.11"
+        "symfony/ai-agent": "^0.12",
+        "symfony/ai-chat": "^0.12"
     },
     "require-dev": {
         "phpunit/phpunit": "^13.0"
