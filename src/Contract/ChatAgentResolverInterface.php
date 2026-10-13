@@ -22,10 +22,10 @@ interface ChatAgentResolverInterface
      * Resolve the inbound OpenAI request to the agent that should answer it.
      *
      * @param string               $model   the OpenAI "model" field — used as the
-     *                                       persona/tenant key, e.g. "curator" or
-     *                                       "museado/curator@walters"
+     *                                      persona/tenant key, e.g. "curator" or
+     *                                      "museado/curator@walters"
      * @param array<string, mixed> $context any extra routing context the transport
-     *                                       extracted (headers, bearer subject, …)
+     *                                      extracted (headers, bearer subject, …)
      *
      * @return AgentInterface|null the agent to run, or null if this resolver does
      *                             not handle the given model

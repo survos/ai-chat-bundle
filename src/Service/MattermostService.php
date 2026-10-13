@@ -39,7 +39,7 @@ final class MattermostService
         $channel ??= $this->defaultChannel;
 
         $options = new MattermostOptions();
-        if ($channel !== null && $channel !== '') {
+        if (null !== $channel && '' !== $channel) {
             $options->recipient($channel);
         }
 
@@ -53,7 +53,7 @@ final class MattermostService
 
         $io->success(sprintf(
             'Posted to Mattermost%s: "%s"',
-            $channel !== null && $channel !== '' ? sprintf(' (channel %s)', $channel) : '',
+            null !== $channel && '' !== $channel ? sprintf(' (channel %s)', $channel) : '',
             $message,
         ));
 
