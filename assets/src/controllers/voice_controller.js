@@ -4,7 +4,7 @@ import { Utterance } from '../audio/utterance.js';
 // Voice is a wrapper around the existing question form and chat events.
 export default class extends Controller {
     static targets = ['input', 'form', 'review', 'readAloud', 'record', 'finish', 'stop', 'status', 'play'];
-    static values = { url: String, token: String, speechUrl: String, captureUrl: String, name: { type: String, default: 'Assistant' } };
+    static values = { url: String, token: String, speechUrl: String, captureUrl: String, rate: { type: Number, default: 1 }, name: { type: String, default: 'Assistant' } };
 
     connect() {
         this.active = false;
@@ -217,6 +217,8 @@ export default class extends Controller {
             if (!current()) return;
             this.audioUrl = URL.createObjectURL(blob);
             this.player = new Audio(this.audioUrl);
+            this.player.playbackRate = Math.max(0.75, Math.min(1.75, this.rateValue));
+            this.player.preservesPitch = true;
             this.player.onended = () => {
                 if (!current()) return;
                 this.releaseMicrophone();

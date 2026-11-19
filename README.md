@@ -81,7 +81,7 @@ No provider keys, retrieval logic or newspaper-specific prompts live in the bund
 
 Resolve its identifier with `survos_stimulus('ai-chat-bundle', 'voice')` and attach
 it using `stimulus_controller`. Values: `url` (transcription POST), `speechUrl`
-(speech POST), `token` (CSRF), `name` (spoken assistant label), and `captureUrl`
+(speech POST), `token` (CSRF), `rate` (playback speed, 0.75–1.75, default 1), `name` (spoken assistant label), and `captureUrl`
 (`asset('@survos/ai-chat-bundle/src/audio/capture_processor.js')`). Include
 `@SurvosAiChat/voice_controls.html.twig` inside that element, and attach the
 controller's `form` and `input` targets to the host form/question field.
