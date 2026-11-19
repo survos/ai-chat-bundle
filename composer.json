@@ -3,7 +3,7 @@
     "description": "Expose Symfony AI agents over an OpenAI-compatible /v1/chat/completions endpoint so chat platforms (e.g. Mattermost Agents) can @-mention them. The bundle owns transport/auth/routing; each app supplies a thin ChatAgentResolver. Ships an mm:post demo command over the Symfony Mattermost notifier. MCP tools planned for v2.",
     "type": "symfony-bundle",
     "license": "MIT",
-    "keywords": ["symfony", "ai", "chat", "agent", "openai", "mattermost", "completions", "notifier"],
+    "keywords": ["symfony-ux", "symfony", "ai", "chat", "agent", "openai", "mattermost", "completions", "notifier"],
     "authors": [
         { "name": "Tac Tacelosky", "email": "tacman@gmail.com" }
     ],

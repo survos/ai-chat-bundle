@@ -1,0 +1,19 @@
+{# Host owns action, CSRF, history and retrieval. Text is always escaped. #}
+{% set controller = survos_stimulus('ai-chat-bundle', 'chat') %}
+<section {{ stimulus_controller(controller) }} {{ stimulus_action(controller, 'restore', 'pageshow@window') }} aria-label="Conversation">
+    {% for message in messages|default([]) %}
+        <div class="card mb-3"><div class="card-body"><strong>{{ message.role }}</strong><div style="white-space: pre-wrap">{{ message.text }}</div></div></div>
+    {% endfor %}
+    <form method="post" action="{{ action }}" {{ stimulus_action(controller, 'send', 'submit') }}>
+        <input type="hidden" name="_token" value="{{ token }}">
+        <label class="form-label d-block">Your question
+            <textarea name="question" required maxlength="{{ maxLength|default(2000) }}" rows="3" class="form-control" placeholder="{{ placeholder|default('Ask a question…') }}" {{ stimulus_target(controller, 'question') }} {{ stimulus_action(controller, 'shortcut', 'keydown') }}></textarea>
+        </label>
+        <div class="d-flex gap-2 flex-wrap mb-3" aria-label="Sample questions">
+            {% for sample in samples|default([]) %}<button type="button" class="btn btn-outline-secondary btn-sm" data-question="{{ sample.question }}" {{ stimulus_action(controller, 'choose', 'click') }}>{{ sample.label }}</button>{% endfor %}
+        </div>
+        <button class="btn btn-primary" {{ stimulus_target(controller, 'submit') }}>Ask</button>
+        <small class="text-secondary ms-2">Ctrl/⌘ + Enter to send. Check the cited sources.</small>
+        <div role="status" aria-live="polite" {{ stimulus_target(controller, 'status') }}></div>
+    </form>
+</section>

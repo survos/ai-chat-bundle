@@ -1,6 +1,7 @@
 # PLAN — survos/ai-chat-bundle
 
-Status: **comms-first scaffold.** Mattermost `mm:post` demo built; OpenAI-compatible
+Status: **comms scaffold plus shared browser composer.** Mattermost `mm:post` demo and
+`@SurvosAiChat/widget.html.twig` built; OpenAI-compatible
 completions endpoint + resolver are designed here, not yet wired. This file is the
 canonical committed design (don't rely on machine-local agent memory — it doesn't
 travel between computers).

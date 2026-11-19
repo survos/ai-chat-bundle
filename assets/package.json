@@ -1,0 +1,26 @@
+{
+  "name": "@survos/ai-chat-bundle",
+  "type": "module",
+  "peerDependencies": {
+    "@hotwired/stimulus": "^3.2.2"
+  },
+  "symfony": {
+    "controllers": {
+      "chat": {
+        "main": "src/controllers/chat_controller.js",
+        "fetch": "eager",
+        "enabled": true
+      },
+      "voice": {
+        "main": "src/controllers/voice_controller.js",
+        "fetch": "eager",
+        "enabled": true
+      },
+      "links": {
+        "main": "src/controllers/links_controller.js",
+        "fetch": "eager",
+        "enabled": true
+      }
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{# Render inside the voice controller's element; the host supplies input/form targets. #}
+{% set voice = survos_stimulus('ai-chat-bundle', 'voice') %}
+<section class="voice-panel" aria-label="Voice conversation">
+    <strong>Talk to {{ name|default('the assistant') }}</strong>
+    <div class="voice-options">
+        <label><input type="checkbox"{% if review|default(true) %} checked{% endif %} {{ stimulus_target(voice, 'review') }} {{ stimulus_action(voice, 'modeChanged', 'change') }}> Review before sending</label>
+        <label><input type="checkbox" checked {{ stimulus_target(voice, 'readAloud') }}> Read answers aloud</label>
+    </div>
+    <p class="voice-help">Turn review off for a hands-free conversation. You can interrupt a reply by speaking. Keep this page open. Recordings are sent for transcription. Replies use an AI-generated voice.</p>
+    <div class="voice-actions">
+        <button type="button" class="btn btn-outline-primary" {{ stimulus_target(voice, 'record') }} {{ stimulus_action(voice, 'start', 'click') }}>🎙 Start talking</button>
+        <button type="button" class="btn btn-outline-primary" {{ stimulus_target(voice, 'finish') }} {{ stimulus_action(voice, 'finish', 'click') }} hidden>Done speaking</button>
+        <button type="button" class="btn btn-danger" {{ stimulus_target(voice, 'stop') }} {{ stimulus_action(voice, 'stop', 'click') }} hidden>Stop conversation</button>
+    </div>
+    <p class="voice-status" role="status" aria-live="polite" {{ stimulus_target(voice, 'status') }}></p>
+</section>
