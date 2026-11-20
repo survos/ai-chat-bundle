@@ -1,6 +1,12 @@
 {# Host owns action, CSRF, history and retrieval. Text is always escaped. #}
 {% set controller = survos_stimulus('ai-chat-bundle', 'chat') %}
 <section {{ stimulus_controller(controller) }} {{ stimulus_action(controller, 'restore', 'pageshow@window') }} aria-label="Conversation">
+    {% if resetAction|default(null) %}
+        <form method="post" action="{{ resetAction }}" class="d-flex justify-content-end mb-3">
+            <input type="hidden" name="_token" value="{{ resetToken }}">
+            <button type="submit" class="btn btn-outline-secondary btn-sm">{{ resetLabel|default('Clear conversation') }}</button>
+        </form>
+    {% endif %}
     {% for message in messages|default([]) %}
         <div class="card mb-3"><div class="card-body"><strong>{{ message.role }}</strong><div style="white-space: pre-wrap">{{ message.text }}</div></div></div>
     {% endfor %}

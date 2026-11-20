@@ -116,3 +116,12 @@ restored history and streamed DOM additions; fragment links remain in-page.
 
 Run the audio/lifecycle tests with `node --test bu/ai-chat-bundle/tests/js/*.test.mjs`
 from the monorepo root.
+
+### Clear conversation
+
+Pass `resetAction` (a POST endpoint) and `resetToken` (its CSRF token) to the shared
+widget to show a **Clear conversation** button. `resetLabel` optionally changes
+the label. The host must validate CSRF and clear both displayed turns and the
+agent memory for the selected conversation, then redirect to the empty chat.
+Omitting `resetAction` preserves existing consumers unchanged. The reset form is
+separate from the question form, so clearing does not require a question.
