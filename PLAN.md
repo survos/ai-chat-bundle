@@ -77,3 +77,6 @@ runs its own loop and calls our tools.
   ids, so encode persona in the `model` field and/or register one Agents service per
   persona/path.
 - `survos/ai-chat-bundle` vs graduating pieces into existing bundles.
+- Tone/personality layer (parked): `data/personalities.yaml` holds eight reusable
+  tone prompts, not wired. Possible uses (a `model` suffix, a widget picker, a
+  registry) are written up in [`docs/personalities.md`](docs/personalities.md).
