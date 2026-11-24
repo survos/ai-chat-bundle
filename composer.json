@@ -1,6 +1,6 @@
 {
     "name": "survos/ai-chat-bundle",
-    "description": "Expose Symfony AI agents over an OpenAI-compatible /v1/chat/completions endpoint so chat platforms (e.g. Mattermost Agents) can @-mention them. The bundle owns transport/auth/routing; each app supplies a thin ChatAgentResolver. Ships an mm:post demo command over the Symfony Mattermost notifier. MCP tools planned for v2.",
+    "description": "Expose Symfony AI agents over an OpenAI-compatible /v1/chat/completions endpoint so chat platforms (e.g. Mattermost Agents) can @-mention them. The bundle owns transport/auth/routing; each app supplies a thin ChatAgentResolver. Ships an mm:post demo command over the Symfony Mattermost notifier. Also ships the “connect your own AI agent” page for an app's MCP server.",
     "type": "symfony-bundle",
     "license": "MIT",
     "keywords": ["symfony-ux", "symfony", "ai", "chat", "agent", "openai", "mattermost", "completions", "notifier"],

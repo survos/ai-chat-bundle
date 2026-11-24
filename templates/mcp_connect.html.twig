@@ -1,0 +1,100 @@
+{#
+ # "Connect your own AI agent": how to add this app's public MCP server to Claude, ChatGPT,
+ # Claude Code or a local stdio client. A fragment: include or embed it inside the app's layout.
+ # Variables and blocks are documented in the bundle README ("MCP connect page").
+ #}
+{%- set endpoint = endpoint ?? (url|trim('/', 'right') ~ '/mcp') -%}
+{%- set server = server ?? null -%}
+{%- set connector_id = connector_id ?? server ?? name|lower|replace({' ': '-'}) -%}
+{%- set section_class = section_class ?? 'card mb-3' -%}
+{%- set body_class = body_class ?? 'card-body' -%}
+{%- set hidden_tools = hidden_tools ?? [] -%}
+{%- set tool_descriptions = tool_descriptions ?? {} -%}
+{%- if tools is not defined or tools is null -%}
+    {%- set tools = server and mcp_server_exists(server) ? mcp_tools(server) : [] -%}
+{%- endif -%}
+<div class="survos-mcp-connect">
+    {% if back is defined and back %}<p><a href="{{ back.url }}">← {{ back.label }}</a></p>{% endif %}
+    {% if title is defined and title %}<h1>{{ title }}</h1>{% endif %}
+    {% block intro %}
+        {% if lead is defined and lead %}<p class="lead">{{ lead }}</p>{% endif %}
+        {% if intro is defined and intro %}<p>{{ intro }}</p>{% endif %}
+    {% endblock %}
+
+    <section class="{{ section_class }}"><div class="{{ body_class }}">
+        <h2>Connect by URL</h2>
+        <p>In your agent’s MCP settings, add a server named <strong>{{ name }}</strong>. Choose <strong>Streamable HTTP</strong> and enter:</p>
+        <pre><code>{{ endpoint }}</code></pre>
+        <p class="mb-0">Choose <strong>No authentication</strong> (or <strong>No sign in</strong>). The connector is read-only. Your AI provider may require a supported plan or workspace administrator approval.</p>
+        {% block url_note %}{% endblock %}
+    </div></section>
+
+    {% if claude ?? true %}
+    <section class="{{ section_class }}"><div class="{{ body_class }}">
+        <h2>Connect in Claude</h2>
+        <p><a class="btn btn-outline-primary" href="https://claude.ai/customize/connectors" target="_blank" rel="noopener">Open Claude connectors ↗</a></p>
+        <ol>
+            <li>Open <strong>Customize → Connectors</strong>, then <strong>+ Add → Add custom connector</strong>.</li>
+            <li>Name it <strong>{{ name }}</strong> and paste <code>{{ endpoint }}</code>.</li>
+            <li>Continue, choose <strong>No sign in</strong>, and finish adding it.</li>
+            <li>In a chat, open <strong>+ → Connectors</strong> and enable {{ name }}.</li>
+        </ol>
+        <p class="mb-0">Team accounts may need an owner to add it first. <a href="https://support.claude.com/en/articles/11175166-get-started-with-custom-connectors-using-remote-mcp" target="_blank" rel="noopener">Claude’s setup guide</a>.</p>
+    </div></section>
+    {% endif %}
+
+    {% if chatgpt ?? true %}
+    <section class="{{ section_class }}"><div class="{{ body_class }}">
+        <h2>Connect in ChatGPT</h2>
+        <p><a class="btn btn-outline-primary" href="https://chatgpt.com/plugins" target="_blank" rel="noopener">Open ChatGPT plugins ↗</a></p>
+        <ol>
+            <li>Select <strong>+ → Add custom MCP server</strong>.</li>
+            <li>Name it <strong>{{ name }}</strong>, set the server URL to <code>{{ endpoint }}</code>, and choose <strong>No authentication</strong>.</li>
+            <li>Review the permissions, create the plugin, and install it.</li>
+            <li>In a new chat, type <strong>@</strong> and select <strong>{{ name }}</strong>.</li>
+        </ol>
+        <p class="mb-0">Your workspace may restrict custom servers. Labels can vary by account. <a href="https://developers.openai.com/api/docs/guides/custom-mcp-server" target="_blank" rel="noopener">ChatGPT’s setup guide</a>.</p>
+    </div></section>
+    {% endif %}
+
+    {% if claude_code ?? true %}
+    <section class="{{ section_class }}"><div class="{{ body_class }}">
+        <h2>Connect in Claude Code</h2>
+        <pre><code>claude mcp add --transport http {{ connector_id }} {{ endpoint }}</code></pre>
+        {% if claude_code_prompt is defined and claude_code_prompt %}<p class="mb-0">Then ask, for example, “{{ claude_code_prompt }}”</p>{% endif %}
+    </div></section>
+    {% endif %}
+
+    {% if server %}
+    {%- set console = console ?? ('/absolute/path/to/' ~ (app_name ?? connector_id) ~ '/bin/console') -%}
+    <section class="{{ section_class }}"><div class="{{ body_class }}">
+        <h2>For developers: connect through a local checkout</h2>
+        <p>For agents supporting stdio servers, use this configuration. Replace the console path with your {{ checkout ?? 'local' }} checkout, and use the absolute path to PHP if your desktop app cannot find it.</p>
+        <pre><code>{{ {mcpServers: {(connector_id): {command: 'php', args: [console, 'mcp:server', server, '--no-debug', '--no-interaction']}}}|json_encode(constant('JSON_PRETTY_PRINT') b-or constant('JSON_UNESCAPED_SLASHES') b-or constant('JSON_UNESCAPED_UNICODE')) }}</code></pre>
+        {% block local_note %}
+            <p class="mb-0">The app reads its own database and AI configuration; you do not paste any provider keys into your agent. Your agent uses its own model to answer.</p>
+        {% endblock %}
+    </div></section>
+    {% endif %}
+
+    <section class="{{ section_class }}"><div class="{{ body_class }}">
+        <h2>What your agent can do</h2>
+        <dl>
+            {% for tool in tools|filter(t => t.name not in hidden_tools) %}
+                <dt><code>{{ tool.name }}</code>{% if tool.title ?? null %} · {{ tool.title }}{% endif %}</dt>
+                <dd>{% if tool_descriptions[tool.name] is defined %}{{ tool_descriptions[tool.name]|raw }}{% else %}{{ tool.description ?? '' }}{% endif %}</dd>
+            {% endfor %}
+        </dl>
+        {% block tools_note %}{% if tools_note is defined and tools_note %}<p>{{ tools_note }}</p>{% endif %}{% endblock %}
+        {% if prompt is defined and prompt %}
+            <h3>Try this prompt</h3>
+            <blockquote class="border-start ps-3">{{ prompt }}</blockquote>
+        {% endif %}
+        {% block check %}{% if check is defined and check %}<p>{{ check }}</p>{% endif %}{% endblock %}
+        {% block footnotes %}
+            {% for note in footnotes ?? [] %}<p class="text-secondary{{ loop.last ? ' mb-0' }}">{{ note }}</p>{% endfor %}
+        {% endblock %}
+    </div></section>
+
+    {% block extra_sections %}{% endblock %}
+</div>

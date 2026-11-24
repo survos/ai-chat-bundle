@@ -125,3 +125,57 @@ the label. The host must validate CSRF and clear both displayed turns and the
 agent memory for the selected conversation, then redirect to the empty chat.
 Omitting `resetAction` preserves existing consumers unchanged. The reset form is
 separate from the question form, so clearing does not require a question.
+
+## MCP connect page
+
+`@SurvosAiChat/mcp_connect.html.twig` is the "Connect your own AI agent" page for an
+app with a public, read-only MCP server (symfony/mcp-bundle): connect by URL
+(Streamable HTTP, no authentication), Claude custom connector steps, ChatGPT custom
+MCP server steps, `claude mcp add`, a local stdio `mcpServers` configuration for
+`bin/console mcp:server <server>`, the tool list, a sample prompt and a connection check.
+
+It is a fragment without a layout: the app keeps its route and a small template that
+extends its own layout and includes (or embeds) the fragment.
+
+```twig
+{% extends 'base.html.twig' %}
+{% block body %}
+    {% embed '@SurvosAiChat/mcp_connect.html.twig' with {
+        name: 'Kid Pan Alley',
+        endpoint: publicUrl ~ '/mcp',
+        server: 'kpa',
+        checkout: 'KPA',
+        back: {url: path('ask'), label: 'Ask the catalog'},
+        lead: 'Search the songs … from your own AI assistant.',
+        hidden_tools: ['agent_calls'],
+        tool_descriptions: {find_songs: 'Find songs by meaning …'},
+        prompt: 'Use Kid Pan Alley to find three songs about winter …',
+    } %}
+        {% block check %}<p>For a quick connection check, ask your agent to call <code>get_song</code> …</p>{% endblock %}
+    {% endembed %}
+{% endblock %}
+```
+
+| Variable | Meaning |
+|---|---|
+| `name` | Service name shown to people and suggested as the connector name. Required. |
+| `endpoint` | The public MCP URL. Or give `url` (the site's public base URL) and `/mcp` is appended. |
+| `server` | The `mcp.servers` key: the stdio command's argument and where the tool list comes from. Without it there is no local-checkout section. |
+| `connector_id` | Name used by `claude mcp add` and as the `mcpServers` key. Default: `server`. |
+| `console`, `app_name`, `checkout` | Console path in the stdio example (default `/absolute/path/to/<app_name>/bin/console`) and the checkout's name in its sentence. |
+| `title`, `back` (`{url, label}`), `lead`, `intro` | Optional heading, back link and introduction. |
+| `tools` | Optional list of `{name, description}`. Omit it to read the tools from the server's MCP registry (`mcp_tools(server)`), so the page can't name a tool the server lacks or miss a new one. |
+| `hidden_tools` | Tool names left off the page (admin or diagnostic tools). |
+| `tool_descriptions` | `{tool: html}` overrides of the registry's model-oriented descriptions with text for people. Rendered as HTML: write it in the app, never from user input. An override for a tool the server no longer has is not shown. |
+| `tools_note`, `prompt`, `check`, `footnotes` (list) | Plain text after the tool list: what the tools may not do, a prompt to try, a connection check and caveats. |
+| `claude_code_prompt` | Optional example question after the `claude mcp add` line. |
+| `claude`, `chatgpt`, `claude_code` | Set to `false` to leave out a section. |
+| `section_class`, `body_class` | Wrapper classes of each section; default Bootstrap `card mb-3` / `card-body`. |
+
+Blocks, for HTML (`{% embed %}`): `intro`, `url_note`, `local_note`, `tools_note`,
+`check`, `footnotes`, `extra_sections`.
+
+The Twig functions `mcp_tools(server)` (`{name, title, description, readOnly}` per tool)
+and `mcp_server_exists(server)` read `Survos\AiChatBundle\Mcp\McpToolCatalog`, which
+builds the server the way `mcp:debug` does. Without symfony/mcp-bundle the catalog is
+empty and `tools` must be passed.
