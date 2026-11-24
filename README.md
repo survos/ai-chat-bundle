@@ -177,5 +177,5 @@ Blocks, for HTML (`{% embed %}`): `intro`, `url_note`, `local_note`, `tools_note
 
 The Twig functions `mcp_tools(server)` (`{name, title, description, readOnly}` per tool)
 and `mcp_server_exists(server)` read `Survos\AiChatBundle\Mcp\McpToolCatalog`, which
-builds the server the way `mcp:debug` does. Without symfony/mcp-bundle the catalog is
+builds the server the way `debug:mcp` does. Without symfony/mcp-bundle the catalog is
 empty and `tools` must be passed.

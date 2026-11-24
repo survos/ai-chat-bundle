@@ -42,7 +42,7 @@ final class McpToolCatalog
             throw new \InvalidArgumentException(\sprintf('No MCP server "%s" is configured (symfony/mcp-bundle, mcp.servers).', $server));
         }
 
-        // As mcp:debug does: the loaders fill the registry when the server is built.
+        // As debug:mcp does: the loaders fill the registry when the server is built.
         $this->builders->get($server)->build();
         $tools = [];
         foreach ($this->registries->get($server)->getTools() as $tool) {
