@@ -134,8 +134,26 @@ app with a public, read-only MCP server (symfony/mcp-bundle): connect by URL
 MCP server steps, `claude mcp add`, a local stdio `mcpServers` configuration for
 `bin/console mcp:server <server>`, the tool list, a sample prompt and a connection check.
 
-It is a fragment without a layout: the app keeps its route and a small template that
-extends its own layout and includes (or embeds) the fragment.
+The bundle serves it at `/ask/connect` (route `survos_ai_chat_connect`); the app only
+configures it and links the route from its menu:
+
+```yaml
+# config/packages/survos_ai_chat.yaml -- the fragment's variables (table below)
+survos_ai_chat:
+    connect:
+        name: Kid Pan Alley
+        server: kpa
+        lead: Search the songs … from your own AI assistant.
+        back: {url: /ask, label: Ask the catalog}
+```
+
+```php
+$this->add($menu, 'survos_ai_chat_connect', label: 'Connect your assistant', icon: 'tabler:plug-connected');
+```
+
+The endpoint defaults to the request's host plus `/mcp` (set `url` or `endpoint` to change it).
+Without `name` the route answers 404. For another layout or HTML in the blocks below, override `templates/bundles/SurvosAiChatBundle/connect_page.html.twig`, or keep
+your own route and template and embed the fragment:
 
 ```twig
 {% extends 'base.html.twig' %}

@@ -1,0 +1,10 @@
+{# The page behind survos_ai_chat_connect. Override templates/bundles/SurvosAiChatBundle/connect_page.html.twig for another layout. #}
+{% extends 'base.html.twig' %}
+{% block title %}Connect your own AI agent{% endblock %}
+{% block body %}
+<div class="row justify-content-center">
+    <div class="col-lg-9">
+        {% include '@SurvosAiChat/mcp_connect.html.twig' with {title: 'Connect your own AI agent'}|merge(page) only %}
+    </div>
+</div>
+{% endblock %}

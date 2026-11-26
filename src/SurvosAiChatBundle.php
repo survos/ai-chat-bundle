@@ -8,7 +8,10 @@ use Survos\AiChatBundle\Mcp\McpToolCatalog;
 use Survos\AiChatBundle\Service\MattermostService;
 use Survos\AiChatBundle\Twig\McpConnectExtension;
 use Survos\Kit\AbstractUxBundle;
+use Survos\Kit\Routing\ConfigurableRoutesInterface;
 use Survos\Kit\SurvosKitBundle;
+use Survos\Kit\Traits\HasConfigurableRoutes;
+use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Kernel\RequiredBundle;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
@@ -28,12 +31,26 @@ use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
  */
 #[RequiredBundle(SurvosKitBundle::class)]
 // Symfony\Component\HttpKernel\Bundle\Bundle <-- Flex auto-registration marker (see Survos\Kit\AbstractSurvosBundle)
-final class SurvosAiChatBundle extends AbstractUxBundle
+final class SurvosAiChatBundle extends AbstractUxBundle implements ConfigurableRoutesInterface
 {
+    use HasConfigurableRoutes;
+
+    public function configure(DefinitionConfigurator $definition): void
+    {
+        $children = $definition->rootNode()->children();
+        $this->addRouteOptions($children, '');
+        $children
+            ->variableNode('connect')->defaultValue([])
+                ->info('Variables of @SurvosAiChat/mcp_connect.html.twig for the page at /ask/connect: name (required), server, lead, prompt, ... (see the README).')
+            ->end()
+        ->end();
+    }
+
     public function loadExtension(array $config, ContainerConfigurator $container, ContainerBuilder $builder): void
     {
-        // Auto-scans src/Command and src/Controller.
+        // Auto-scans src/Command and src/Controller; HasConfigurableRoutes wires the controller routes.
         parent::loadExtension($config, $container, $builder);
+        $builder->setParameter('survos_ai_chat.connect', $config['connect']);
 
         // The command lives in src/Service (it's a service first, CLI second —
         // see CONVENTIONS.md), so register it explicitly to bind the default channel.
